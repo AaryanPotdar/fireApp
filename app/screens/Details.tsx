@@ -5,7 +5,6 @@ const Details = () => {
     return(
         <View>
             <Text>List</Text>
-            <Button onPress={}
         </View>
     )
 }

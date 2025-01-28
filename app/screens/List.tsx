@@ -14,26 +14,27 @@ const List = ({ navigation }: any) => {
     const [loadingJoke, setLoadingJoke] = useState(false);
 
     const fetchJoke = async () => {
-        setLoadingJoke(true);
-        try {
-            const response = await fetch('https://icanhazdadjoke.com/', {
-                headers: {
-                    Accept: 'application/json',
-                },
-            });
+        setLoadingJoke(true);
+        try {
+            const response = await fetch('https://icanhazdadjoke.com/', {
+                headers: {
+                    Accept: 'application/json',
+                },
+            });
     
-            if (!response.ok) {
-                throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`);
-            }
+            // Validate response
+            if (!response.ok) {
+                throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`);
+            }
     
-            const data = await response.json();
-            setJoke(data.joke);
-        } catch (error) {
-            console.error('Error fetching joke:', error);
-            setJoke('Failed to fetch joke. Please check your internet connection and try again.');
-        } finally {
-            setLoadingJoke(false);
-        }
+            const data = await response.json();
+            setJoke(data.joke);
+        } catch (error) {
+            console.error('Error fetching joke:', error);
+            setJoke('Failed to fetch joke. Please check your internet connection and try again.');
+        } finally {
+            setLoadingJoke(false);
+        }
     };
     
 
@@ -260,3 +261,106 @@ const List = ({ navigation }: any) => {
 }
 
 export default List;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#fff',
+    },
+    form: {
+        marginBottom: 20,
+    },
+    input: {
+        backgroundColor: '#F8FAFC',
+        padding: 16,
+        borderRadius: 12,
+        marginBottom: 12,
+        borderWidth: 1,
+        borderColor: '#E2E8F0',
+        fontSize: 16,
+    },
+    list: {
+        marginTop: 8,
+    },
+    todoContainer: {
+        backgroundColor: '#F8FAFC',
+        padding: 16,
+        borderRadius: 12,
+        marginBottom: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    todoRow: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+    },
+    todoText: {
+        fontSize: 16,
+        color: '#1E293B',
+    },
+    todoTextDone: {
+        textDecorationLine: 'line-through',
+        color: '#94A3B8',
+    },
+    deleteButton: {
+        padding: 8,
+    },
+    jokeSection: {
+        marginBottom: 20,
+        marginTop: 10,
+    },
+    jokeContainer: {
+        backgroundColor: '#EFF6FF',
+        padding: 16,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#93C5FD',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+        minHeight: 100,
+        flexGrow: 1,
+    },
+    jokeContent: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    jokeLabel: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: '#2563EB',
+        marginBottom: 8,
+    },
+    jokeText: {
+        fontSize: 14,
+        color: '#1E40AF',
+        lineHeight: 20,
+        flexWrap: 'wrap',
+    },
+    refreshButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        padding: 12,
+        borderRadius: 8,
+        backgroundColor: '#DBEAFE',
+        borderWidth: 1,
+        borderColor: '#93C5FD',
+        marginTop: 8,
+    },
+    refreshText: {
+        color: '#0EA5E9',
+        fontSize: 14,
+        fontWeight: '500',
+    },
+})

@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { FIREBASE_DB } from '../../firebaseConfig'
 import { addDoc, collection, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../context/ThemeContext';
 
 const List = ({ navigation }: any) => {
+    const { colors } = useTheme();
 
     const [todos, setTodos] = useState<any[]>([]);
     const [todo, setTodo] = useState('')
@@ -34,6 +36,7 @@ const List = ({ navigation }: any) => {
             setLoadingJoke(false);
         }
     };
+    
 
     useEffect(() => {
         const todoRef = collection(FIREBASE_DB, 'todos');
@@ -102,6 +105,112 @@ const List = ({ navigation }: any) => {
             </Pressable>
         )
     }
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            padding: 20,
+            backgroundColor: colors.background,
+        },
+        form: {
+            marginBottom: 20,
+        },
+        input: {
+            backgroundColor: colors.card,
+            padding: 16,
+            borderRadius: 12,
+            marginBottom: 12,
+            borderWidth: 1,
+            borderColor: colors.border,
+            fontSize: 16,
+            color: colors.text,
+        },
+        list: {
+            marginTop: 8,
+        },
+        todoContainer: {
+            backgroundColor: colors.card,
+            padding: 16,
+            borderRadius: 12,
+            marginBottom: 12,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderWidth: 1,
+            borderColor: colors.border,
+        },
+        todoRow: {
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+        },
+        todoText: {
+            fontSize: 16,
+            color: colors.text,
+        },
+        todoTextDone: {
+            textDecorationLine: 'line-through',
+            color: '#94A3B8',
+        },
+        deleteButton: {
+            padding: 8,
+        },
+        jokeSection: {
+            marginBottom: 20,
+            marginTop: 10,
+        },
+        jokeContainer: {
+            backgroundColor: colors.jokeBackground,
+            padding: 16,
+            borderRadius: 12,
+            borderWidth: 1,
+            borderColor: colors.jokeBorder,
+            shadowColor: colors.text,
+            shadowOffset: {
+                width: 0,
+                height: 1,
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+            elevation: 2,
+            minHeight: 100,
+            flexGrow: 1,
+        },
+        jokeContent: {
+            flex: 1,
+            justifyContent: 'center',
+        },
+        jokeLabel: {
+            fontSize: 12,
+            fontWeight: 'bold',
+            color: colors.jokeText,
+            marginBottom: 8,
+        },
+        jokeText: {
+            fontSize: 14,
+            color: colors.jokeText,
+            lineHeight: 20,
+            flexWrap: 'wrap',
+        },
+        refreshButton: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            padding: 12,
+            borderRadius: 8,
+            backgroundColor: '#DBEAFE',
+            borderWidth: 1,
+            borderColor: '#93C5FD',
+            marginTop: 8,
+        },
+        refreshText: {
+            color: '#0EA5E9',
+            fontSize: 14,
+            fontWeight: '500',
+        },
+    });
 
     return(
         <View style={styles.container}>

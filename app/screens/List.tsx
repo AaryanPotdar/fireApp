@@ -14,22 +14,19 @@ const List = ({ navigation }: any) => {
     const [loadingJoke, setLoadingJoke] = useState(false);
 
     const fetchJoke = async () => {
-        setLoadingJoke(true);
         try {
-            // console.log('Fetching joke...');
             const response = await fetch('https://icanhazdadjoke.com/', {
                 headers: {
                     'Accept': 'application/json'
                 }
             });
             const data = await response.json();
-            // console.log('Joke received:', data.joke);
             setJoke(data.joke);
         } catch (error) {
             console.error('Error fetching joke:', error);
             setJoke('Failed to fetch joke. Tap refresh to try again.');
         } finally {
-            setLoadingJoke(false);
+            console.log("joke fetch finally block")
         }
     };
 

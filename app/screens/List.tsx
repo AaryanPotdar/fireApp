@@ -1,4 +1,4 @@
-import { View, Text, Button, TextInput, StyleSheet, FlatList, Pressable } from 'react-native'
+import { View, Text, Button, TextInput, StyleSheet, FlatList, Pressable, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { FIREBASE_DB } from '../../firebaseConfig'
 import { addDoc, collection, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore'
@@ -8,6 +8,28 @@ const List = ({ navigation }: any) => {
 
     const [todos, setTodos] = useState<any[]>([]);
     const [todo, setTodo] = useState('')
+    const [joke, setJoke] = useState('');
+    const [loadingJoke, setLoadingJoke] = useState(false);
+
+    const fetchJoke = async () => {
+        setLoadingJoke(true);
+        try {
+            // console.log('Fetching joke...');
+            const response = await fetch('https://icanhazdadjoke.com/', {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            const data = await response.json();
+            // console.log('Joke received:', data.joke);
+            setJoke(data.joke);
+        } catch (error) {
+            console.error('Error fetching joke:', error);
+            setJoke('Failed to fetch joke. Tap refresh to try again.');
+        } finally {
+            setLoadingJoke(false);
+        }
+    };
 
     useEffect(() => {
         const todoRef = collection(FIREBASE_DB, 'todos');
@@ -25,6 +47,10 @@ const List = ({ navigation }: any) => {
             }
         })
         return () => subscriber();
+    }, []);
+
+    useEffect(() => {
+        fetchJoke();
     }, []);
 
     const addToDo = async () => {
@@ -75,6 +101,31 @@ const List = ({ navigation }: any) => {
 
     return(
         <View style={styles.container}>
+            <View style={styles.jokeSection}>
+                <View style={styles.jokeContainer}>
+                    {loadingJoke ? (
+                        <ActivityIndicator size="large" color="#0EA5E9" />
+                    ) : (
+                        <View style={styles.jokeContent}>
+                            <Text style={styles.jokeLabel}>Dad Joke of the Day:</Text>
+                            <Text style={styles.jokeText}>{joke || 'Loading joke...'}</Text>
+                        </View>
+                    )}
+                </View>
+                <Pressable 
+                    onPress={fetchJoke} 
+                    style={styles.refreshButton}
+                    hitSlop={10}
+                >
+                    <Text style={styles.refreshText}>Get New Joke</Text>
+                    <Ionicons 
+                        name="refresh" 
+                        size={20} 
+                        color="#0EA5E9" 
+                    />
+                </Pressable>
+            </View>
+            
             <View style={styles.form}>
                 <TextInput 
                     style={styles.input}
@@ -85,6 +136,7 @@ const List = ({ navigation }: any) => {
                 />
                 <Button onPress={addToDo} title='Add' disabled={todo === ''} />
             </View>
+            
             <FlatList
                 data={todos}
                 renderItem={renderTodo}
@@ -143,5 +195,59 @@ const styles = StyleSheet.create({
     },
     deleteButton: {
         padding: 8,
-    }
+    },
+    jokeSection: {
+        marginBottom: 20,
+        marginTop: 10,
+    },
+    jokeContainer: {
+        backgroundColor: '#EFF6FF',
+        padding: 16,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#93C5FD',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 2,
+        minHeight: 100,
+        flexGrow: 1,
+    },
+    jokeContent: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    jokeLabel: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: '#2563EB',
+        marginBottom: 8,
+    },
+    jokeText: {
+        fontSize: 14,
+        color: '#1E40AF',
+        lineHeight: 20,
+        flexWrap: 'wrap',
+    },
+    refreshButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        padding: 12,
+        borderRadius: 8,
+        backgroundColor: '#DBEAFE',
+        borderWidth: 1,
+        borderColor: '#93C5FD',
+        marginTop: 8,
+    },
+    refreshText: {
+        color: '#0EA5E9',
+        fontSize: 14,
+        fontWeight: '500',
+    },
 })

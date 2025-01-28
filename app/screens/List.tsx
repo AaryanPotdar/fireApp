@@ -12,23 +12,27 @@ const List = ({ navigation }: any) => {
     const [loadingJoke, setLoadingJoke] = useState(false);
 
     const fetchJoke = async () => {
-        setLoadingJoke(true);
-        try {
-            // console.log('Fetching joke...');
-            const response = await fetch('https://icanhazdadjoke.com/', {
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            const data = await response.json();
-            // console.log('Joke received:', data.joke);
-            setJoke(data.joke);
-        } catch (error) {
-            console.error('Error fetching joke:', error);
-            setJoke('Failed to fetch joke. Tap refresh to try again.');
-        } finally {
-            setLoadingJoke(false);
-        }
+        setLoadingJoke(true);
+        try {
+            const response = await fetch('https://icanhazdadjoke.com/', {
+                headers: {
+                    Accept: 'application/json',
+                },
+            });
+    
+            // Validate response
+            if (!response.ok) {
+                throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`);
+            }
+    
+            const data = await response.json();
+            setJoke(data.joke);
+        } catch (error) {
+            console.error('Error fetching joke:', error);
+            setJoke('Failed to fetch joke. Please check your internet connection and try again.');
+        } finally {
+            setLoadingJoke(false);
+        }
     };
 
     useEffect(() => {

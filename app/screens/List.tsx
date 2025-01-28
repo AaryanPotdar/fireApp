@@ -14,21 +14,28 @@ const List = ({ navigation }: any) => {
     const [loadingJoke, setLoadingJoke] = useState(false);
 
     const fetchJoke = async () => {
+        setLoadingJoke(true);
         try {
             const response = await fetch('https://icanhazdadjoke.com/', {
                 headers: {
-                    'Accept': 'application/json'
-                }
+                    Accept: 'application/json',
+                },
             });
+    
+            if (!response.ok) {
+                throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`);
+            }
+    
             const data = await response.json();
             setJoke(data.joke);
         } catch (error) {
             console.error('Error fetching joke:', error);
-            setJoke('Failed to fetch joke. Tap refresh to try again.');
+            setJoke('Failed to fetch joke. Please check your internet connection and try again.');
         } finally {
-            console.log("joke fetch finally block")
+            setLoadingJoke(false);
         }
     };
+    
 
     useEffect(() => {
         const todoRef = collection(FIREBASE_DB, 'todos');
